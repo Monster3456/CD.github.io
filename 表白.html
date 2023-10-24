@@ -1,0 +1,381 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>李老师  &  陈同学</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+      background-color: #F1F3F6;
+      padding-top: 100px;
+    }
+
+    h1 {
+      font-size: 144px;
+      color: #333;
+    }
+
+    #heart {
+      width: 200px;
+      fill: #ff3852;
+      transform-origin: center;
+      transform: scale(1);
+      animation: heartbeat 1.5s infinite;
+    }
+
+    @keyframes heartbeat {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    #audio-player {
+      width: 600px;
+      margin: 90px auto;
+    }
+
+    #song-name {
+      font-size: 36px;
+      color: #777;
+    }
+
+    #message {
+      margin-top: 100px;
+      font-size: 48px;
+      color: #777;
+    }
+
+    #playlist {
+      margin-top: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .playlist-item {
+      margin: 10px;
+      cursor: pointer;
+    }
+
+    #dynamic-image-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+     #dynamic-image {
+      margin-top: 100px;
+      animation: rotate-image 10s linear infinite;
+    }
+
+    .playlist-item:hover {
+      color: #ff3852;
+    }
+
+    <title>图片展示</title>
+    .image-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .image-container img {
+      width: 800px;
+      height: 1200px;
+      object-fit: cover;
+      margin: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .image-container figure {
+      margin: 10px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    .image-container figcaption {
+      font-size: 80px;
+      color: #333;
+      margin-top: 5px;
+    }
+
+    <title>视频展示</title>
+    .video-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 640px;
+      height: 360px;
+      overflow: hidden;
+    }
+
+    .video-container video {
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>李老师 & 陈同学</h1>
+
+<svg id="heart" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#FF3852">
+  <path d="M12 21.35l-9-8.594c-2.585-2.49-2.585-6.518 0-9.008 2.506-2.416 6.556-2.416 9.062 0l0.938 0.906 0.938-0.906c2.506-2.416 6.556-2.416 9.062 0 2.585 2.49 2.585 6.518 0 9.008l-9 8.594zM12 3.186c-1.935-1.859-5.076-1.859-7.011 0-1.869 1.795-1.869 4.706 0 6.5l8 7.687 8-7.687c1.869-1.794 1.869-4.705 0-6.5-1.935-1.859-5.076-1.859-7.011 0l-1.989 1.914-1.989-1.914z"/>
+</svg>
+
+
+
+  <audio id="audio-player" controls>
+    <source src="G.E.M.邓紫棋 - 多远都要在一起 [无损 高质量].mp3" type="audio/mp3">
+    <source src="薛之谦 - 演员.mp3" type="audio/mp3">
+    <source src="易烊千玺 - 你说 [无损 高质量].mp3" type="audio/mp3">
+    <source src="Shane Filan - Beautiful In White [无损 高质量].mp3" type="audio/mp3">
+    <source src="夏日入侵企画 - 想去海边 [无损 高质量].mp3" type="audio/mp3">
+    <source src="张杰 - 想见你想见你想见你 (Live版) [无损 高质量].mp3" type="audio/mp3">
+    <source src="我俩分不开.mp3" type="audio/mp3">
+    <source src="粥粥和小伙,粥粥 - 就这样爱着你 [无损 高质量].mp3" type="audio/mp3">
+    <source src="莫斯特 - 我有多么爱你（正式版）.mp3" type="audio/mp3">
+    <source src="陈小春 - 相依为命.mp3" type="audio/mp3">
+    <source src="陈绮贞 - 我喜欢上你时的内心活动 [无损 高质量].mp3" type="audio/mp3">
+    <source src="颜人中 - 你想要的 [无损 高质量].mp3" type="audio/mp3">
+    <source src="颜人中 - 夏夜最后的烟火 [无损 高质量].mp3" type="audio/mp3">
+    <!-- 添加更多歌曲 -->
+  </audio>
+
+  <p id="song-name"></p>
+
+  <div id="playlist">
+    <span class="playlist-item" onclick="playPreviousSong()">上一首</span>
+    <span class="playlist-item" onclick="playNextSong()">下一首</span>
+  </div>
+  <p id="message"></p>
+
+  <script>
+    // JavaScript脚本
+    var audioPlayer = document.getElementById('audio-player');
+    var currentSong = 0;
+    var songs = [
+      { src: 'G.E.M.邓紫棋 - 多远都要在一起 [无损 高质量].mp3', name: 'G.E.M.邓紫棋 - 多远都要在一起' },
+      { src: '薛之谦 - 演员.mp3', name: '薛之谦 - 演员' },
+      { src: '易烊千玺 - 你说 [无损 高质量].mp3', name: '易烊千玺 - 你说' },
+      { src: 'Shane Filan - Beautiful In White [无损 高质量].mp3', name: 'Shane Flan - Beautiful In White' },
+      { src: '夏日入侵企画 - 想去海边 [无损 高质量].mp3', name: '夏日入侵企画 - 想去海边' },
+      { src: '张杰 - 想见你想见你想见你 (Live版) [无损 高质量].mp3', name: '张杰 - 想见你想见你想见你' },
+      { src: '我俩分不开.mp3', name: '我俩分不开' },
+      { src: '粥粥和小伙,粥粥 - 就这样爱着你 [无损 高质量].mp3', name: '粥粥和小伙,粥粥 - 就这样爱着你' },
+      { src: '莫斯特 - 我有多么爱你（正式版）.mp3', name: '莫斯特 - 我有多么爱你' },
+      { src: '陈小春 - 相依为命.mp3', name: '陈小春 - 相依为命' },
+      { src: '陈绮贞 - 我喜欢上你时的内心活动 [无损 高质量].mp3', name: '陈绮贞 - 我喜欢上你时的内心活动' },
+      { src: '颜人中 - 你想要的 [无损 高质量].mp3', name: '颜人中 - 你想要的' },
+      { src: '颜人中 - 夏夜最后的烟火 [无损 高质量].mp3', name: '颜人中 - 夏夜最后的烟火' }
+      // 添加更多歌曲
+    ];
+    var songNameElement = document.getElementById('song-name');
+    var messageElement = document.getElementById('message');
+
+    audioPlayer.addEventListener('ended', function() {
+      playNextSong();
+    });
+
+    function updateSongName() {
+      var currentSongName = songs[currentSong].name;
+      songNameElement.textContent = '当前播放：' + currentSongName;
+    }
+
+    function playSong(index) {
+      if (index >= 0 && index < songs.length) {
+        currentSong = index;
+        audioPlayer.src = songs[currentSong].src;
+        audioPlayer.load(); // 重新加载音频源
+        audioPlayer.play();
+        updateSongName();
+      }
+    }
+
+    function playNextSong() {
+      currentSong++;
+      if (currentSong >= songs.length) {
+        currentSong = 0; // 播放列表结束后重新开始
+      }
+      playSong(currentSong);
+    }
+
+    function playPreviousSong() {
+      currentSong--;
+      if (currentSong < 0) {
+        currentSong = songs.length - 1; // 回到播放列表末尾
+      }
+      playSong(currentSong);
+    }
+
+    playSong(currentSong);
+
+    setTimeout(function() {
+      messageElement.textContent = '乖乖，我爱你！';
+    }, 2000);
+  </script>
+  <div id="dynamic-image-container">
+    <img id="dynamic-image" src="mua 00_00_00-00_00_30.gif" alt="动态图片">
+    <img class="dynamic-image" src="木啊 00_00_00-00_00_30.gif" alt="动态图片2">
+  </div>
+  <h1>李老师和陈同学的半周年</h1>
+
+  <div class="image-container">
+    <figure>
+      <img src="初识1.png" >
+      <img src="初识2.jpg" >
+      <figcaption>互相做的壁纸，算是表达青涩的喜欢</figcaption>
+    </figure>
+
+    <figure>
+      <img src="开始一起听.jpg" >
+      <img src="现在一起听.jpg" >
+      <figcaption>从开始一起听到现在的4600+小时</figcaption>
+    </figure>
+
+    <figure>
+      <img src="男情头.jpg" >
+      <img src="女情头.jpg" >
+      <figcaption>一直都不换的情头</figcaption>
+    </figure>
+
+    <figure>
+      <img src="揭阳.jpg" >
+      <img src="第一次牵手.jpg" >
+      <img src="揭阳1.jpg" >
+      <img src="揭阳2.jpg" >
+      <img src="揭阳4.jpg" >
+      <figcaption>第一次为一个人去陌生城市，做了很多有意义的事，更加确定了爱你就是唯一的答案</figcaption>
+    </figure>
+
+    <figure>
+      <img src="看我洗澡.jpg" >
+      <img src="去成都.jpg" >
+      <figcaption>第一次看我洗澡哈  做的这个图片真的好好哭</figcaption>
+    </figure>
+
+    <figure>
+      <img src="情侣装壁纸.jpg" >
+      <img src="情人节.jpg" >
+      <img src="第一封情书.jpg" >
+      <img src="手链.jpg" >
+      <figcaption>这个壁纸也好好看哈哈哈  第一个情人节只能线上唱歌呜呜呜呜  是第一封信也是第一封情书呀</figcaption>
+    </figure>
+
+    <figure>
+      <img src="去深圳.jpg" >
+      <video src="亲亲.mp4" controls></video>
+      <figcaption>忍不了一点，忙完就想去深圳  狂亲</figcaption>
+    </figure>
+
+    <figure>
+      <img src="狂飙.jpg" >
+      <img src="深圳.jpg" >
+      <img src="深圳1.jpg" >
+      <img src="书.jpg" >
+      <figcaption>咱几乎一起把狂飙看完了  去了东门  一起给对方买了书</figcaption>
+    </figure>
+
+    <figure>
+      <img src="色.jpg" >
+      <img src="色1.jpg" >
+      <img src="色2.jpg" >
+      <img src="色3.jpg" >
+      <img src="色4.jpg" >
+      <figcaption>咱一起拍了小露身材的合照哈哈哈</figcaption>
+    </figure>
+
+    <figure>
+      <img src="郁金香.jpg" >
+      <img src="郁金香1.jpg" >
+      <img src="郁金香2.jpg" >
+      <figcaption>是亲手种的和制作的干花呀</figcaption>
+    </figure>
+
+    <figure>
+      <img src="成都1.jpg" >
+      <img src="成都.jpg" >
+      <img src="成都2.jpg" >
+      <img src="喝茶.jpg" >
+      <img src="成都4.jpg" >
+      <figcaption>哈哈哈哈  你来成都啦</figcaption>
+    </figure>
+
+    <figure>
+      <img src="抓包.jpg" >
+      <video src="抓包.mp4" controls></video>
+      <img src="导生.jpg" >
+      <video src="导生.mp4" controls></video>
+      <figcaption>你被抓包啦 笑死我了  导生表演，还好有你在，就是想唱给你呀</figcaption>
+    </figure>
+
+    <figure>
+      <video src="和哥打球.mp4" controls></video>
+      <video src="生日.mp4" controls></video>
+      <img src="生日1.jpg" >
+      <img src="生日2.jpg" >
+      <img src="生日3.jpg" >
+      <figcaption>去找你的哥哥去玩啦第一次和你一起过你生日和我的生日哈哈哈</figcaption>
+    </figure>
+
+    <figure>
+      <img src="祝福.jpg" >
+      <img src="棒棒糖.jpg" >
+      <img src="很好看.jpg" >
+      <img src="幼稚.jpg" >
+      <img src="一起上课.jpg" >
+      <img src="护肤.jpg" >
+      <figcaption>给别人生日的祝福和棒棒糖 拍了很好看的照片 拍了你的憨憨照 一起上课 一起护肤</figcaption>
+    </figure>
+
+     <figure>
+      <video src="吹头发.mp4" controls></video>
+      <video src="背背.mp4" controls></video>
+      <video src="滑滑梯.mp4" controls></video>
+      <figcaption>给你吹头发呀，那时候我头发也好长啊  背着你一起做了这个很美好的视频  你太可爱了哈哈哈哈</figcaption>
+    </figure>
+
+    <figure>
+      <img src="欢乐谷1.jpg" >
+      <img src="欢乐谷2.jpg" >
+      <img src="欢乐谷3.jpg" >
+      <img src="欢乐谷4.jpg" >
+      <img src="抱着脚.jpg" >
+      <figcaption>去欢乐谷玩  确实好好玩哈哈哈就是玩吐了   抱着你的脚给你捂着哈哈</figcaption>
+    </figure>
+
+    <figure>
+      <video src="吐了.mp4" controls></video>
+      <video src="算命.mp4" controls></video>
+      <figcaption>呜呜呜呜大摆锤玩吐了哈哈哈，你是真的会算命的背宝贝</figcaption>
+    </figure>
+
+    <figure>
+      <img src="美食1.jpg" >
+      <img src="美食2.jpg" >
+      <img src="美食3.jpg" >
+      <img src="美食4.jpg" >
+      <figcaption>呜呜呜呜这次你来成都我们吃了好多美食呀呜呜呜</figcaption>
+    </figure>
+
+    <figure>
+      <img src="揭阳11.jpg" >
+      <img src="揭阳12.jpg" >
+      <img src="揭阳13.jpg" >
+      <img src="揭阳14.jpg" >
+      <img src="揭阳15.jpg" >
+      <figcaption>从南京又去揭阳啦，一起看电影，吃火锅，一起看《我爱你》</figcaption>
+    </figure>
+
+    <figure>
+      <video src="糖.mp4" controls></video>
+      <video src="糖1.mp4" controls></video>
+      <figcaption>你给我亲手做的糖，还给我录了视频，爱宝宝</figcaption>
+    </figure>
+    <!-- 添加更多图片 -->
+  </div>
+</body>
+</html>
